@@ -95,7 +95,7 @@ public class GUI extends JFrame {
 	
 	/** Version number of program - displayed as part of window title.
 	 *  DO NOT EDIT: This line is also used in creating the file name of the jar file. */
-	public static final String version = "0.5.6";
+	public static final String version = "0.5.7";
 	
 	/** Strings displayed on menus and buttons */
 	public static final String LOAD_AUDIO = "Load Audio Data";
