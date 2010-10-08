@@ -30,6 +30,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 
+import java.util.Arrays;
 import java.util.ListIterator;
 
 import javax.swing.JPanel;
@@ -281,6 +282,14 @@ public class BeatTrackDisplay
 	 */
 	public static double allowedError = 0.1;
 
+	/** For evaluation of beat tracking results, indicates whether <code>allowedError</code>
+	 *  is interpreted as absolute (in seconds) or relative (0-1).
+	 */
+	public static boolean useRelativeError = false;
+	
+	/** For evaluation, select whether to use the P-score or T-score */
+	public static boolean usePScore = false;
+
 	/** mode for scrolling the display:
 	 * 	if true the cursor remains centred on the screen and the data scrolls;
 	 *  if false the cursor moves and the data is changed just before
@@ -475,7 +484,7 @@ public class BeatTrackDisplay
 
 	/** Sets the length of audio that is visible at any one time (i.e. zoom factor).
 	 *  @param msec Length in milliseconds
-	 */ 
+	 */
 	synchronized public void setVisibleAmount(int msec) {
 		visibleTimeLength = (double)msec / 1000.0;
 		if (visibleTimeStart + visibleTimeLength > maximumTime)
@@ -1144,7 +1153,7 @@ public class BeatTrackDisplay
 	/** Constant representing an unknown relationship between metrical levels */
 	protected static final double UNKNOWN = -1.0;
 	
-	/** Finds the mean tempo from an array of beat times
+	/** Finds the mean tempo (as inter-beat interval) from an array of beat times
 	 *  @param d An array of beat times
 	 *  @return The average inter-beat interval
 	 */
@@ -1152,6 +1161,23 @@ public class BeatTrackDisplay
 		if ((d == null) || (d.length < 2))
 			return -1.0;
 		return (d[d.length - 1] - d[0]) / (d.length - 1);
+	} // getAverageIBI()
+	
+	/** Finds the median tempo (as inter-beat interval) from an array of beat times
+	 *  @param d An array of beat times
+	 *  @return The median inter-beat interval
+	 */
+	public static double getMedianIBI(double[] d) {
+		if ((d == null) || (d.length < 2))
+			return -1.0;
+		double[] ibi = new double[d.length-1];
+		for (int i = 1; i < d.length; i++)
+			ibi[i-1] = d[i] - d[i-1];
+		Arrays.sort(ibi);
+		if (ibi.length % 2 == 0)
+			return (ibi[ibi.length / 2] + ibi[ibi.length / 2 - 1]) / 2;
+		else
+			return ibi[ibi.length / 2];
 	} // getAverageIBI()
 	
 	/** Estimates the metrical relationship between two beat sequences.
@@ -1234,13 +1260,16 @@ public class BeatTrackDisplay
 	    int ok = 0;
 	    int extra = 0;
 	    double metricalLevel = getRhythmicLevel(beatsArr, correct);
+	    double errorWindow = allowedError;
+	    if (useRelativeError)
+	    	errorWindow *= getMedianIBI(correct);
 	    // double[] revBeats = makeRealBeatList(correctBeats, metricalLevel, true);
 	    int b = 0;	// index of beats to be evaluated
 	    int c = 0;	// index of correct (annotated) beats
 	    for ( ; b < beatsArr.length && (beatsArr[b] < correct[c]); b++)
 	        extra++;    // skip any "beats" before music starts
 	    while ((c < correct.length) && (b < beatsArr.length)) {
-	        if (Math.abs(beatsArr[b] - correct[c]) < allowedError) {
+	        if (Math.abs(beatsArr[b] - correct[c]) < errorWindow) {
 	            ok++;
 	            b++;
 	            c++;
@@ -1260,9 +1289,15 @@ public class BeatTrackDisplay
 	            fp++;
 	        b++;
 	    }
-	    System.out.printf("%4.2f %5.3f %5.3f", metricalLevel, getAverageIBI(correct), getAverageIBI(beatsArr));
-	    System.out.printf("  ok: " + ok + "  f+: " + fp + "  f-: " + fn +
+	    if (usePScore) {
+	    	System.out.printf("%4.2f %5.3f %5.3f", metricalLevel, getMedianIBI(correct), getMedianIBI(beatsArr));
+	    	System.out.printf("  ok: " + ok + "  f+: " + fp + "  f-: " + fn +
+	       				  "  Score: %5.1f\n", (double)(ok*100) / (double)(Math.max(fp, fn) + ok));
+	    } else {
+	    	System.out.printf("%4.2f %5.3f %5.3f", metricalLevel, getAverageIBI(correct), getAverageIBI(beatsArr));
+	    	System.out.printf("  ok: " + ok + "  f+: " + fp + "  f-: " + fn +
 	       				  "  Score: %5.1f\n", (double)(ok*100) / (double)(fp+fn+ok));
+	    }
 	    if (ok + fp + extra != beatsArr.length)
 	    	System.err.println("Beat count wrong " + extra + " " + beatsArr.length + " " + correct.length);
 	} // evaluate()

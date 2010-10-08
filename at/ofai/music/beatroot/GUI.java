@@ -95,7 +95,7 @@ public class GUI extends JFrame {
 	
 	/** Version number of program - displayed as part of window title.
 	 *  DO NOT EDIT: This line is also used in creating the file name of the jar file. */
-	public static final String version = "0.5.5";
+	public static final String version = "0.5.6";
 	
 	/** Strings displayed on menus and buttons */
 	public static final String LOAD_AUDIO = "Load Audio Data";
@@ -339,7 +339,12 @@ public class GUI extends JFrame {
 	public void loadBeatData(String fileName) {
 		if (fileName != null) {
 			try {
-				beats = EventList.readBeatTrackFile(fileName);
+				if (fileName.endsWith(".tmf"))
+					beats = EventList.readBeatTrackFile(fileName);
+				else if (fileName.endsWith(".lbl"))
+					beats = EventList.readLabelFile(fileName);
+				else // if (fileName.endsWith(".txt"))
+					beats = EventList.readBeatsAsText(fileName);
 				setBeatData(beats);
 			} catch (Exception e) {
 				System.err.println("Error loading beat data: " + e);

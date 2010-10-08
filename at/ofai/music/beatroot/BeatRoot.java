@@ -134,6 +134,8 @@ public class BeatRoot {
 	 * <LI><I><B>-l</B> lowThreshold</I> Spectrogram energy threshold corresponding
 	 *  to minimum value in colour map</LI>
 	 * <LI><I><B>-o</B> outputFile</I> Save output to this file (implies <I><B>-b</B></I>)</LI>
+	 * <LI><I><B>-O</B> Output the times of onsets, not beats, and exit (use -o
+	 * flag to specify the output file; implies batch mode)</LI>
 	 * <LI><I><B>-p</B></I> Play audio with beats as soon as processing is completed</LI>
 	 * <LI><I><B>-q</B></I> Suppress output of warnings (TODO) </LI>
 	 * <LI><I><B>-s</B> audioScaleFactor</I> Constant for scaling amplitude envelope display</LI>
@@ -142,6 +144,7 @@ public class BeatRoot {
 	 * <LI><I><B>-w</B></I> live input (not used)</LI>
 	 * <LI><I><B>-c</B></I> cursor is always at centre; data scrolls past it</LI>
 	 * <LI><I><B>-e</B> allowedError</I> allowed error in beat position for evaluation</LI>
+	 * <LI><I><B>-E</B> allowedRelativeError</I> allowed relative error (0-1) in beat position for evaluation</LI>
 	 * </BL>
 	 */
 	public void processArgs(String[] args) {
@@ -169,6 +172,14 @@ public class BeatRoot {
 					break;
 				case 'e':
 					BeatTrackDisplay.allowedError = Double.parseDouble(args[++i]);
+					BeatTrackDisplay.useRelativeError = false;
+					break;
+				case 'E':
+					BeatTrackDisplay.allowedError = Double.parseDouble(args[++i]);
+					BeatTrackDisplay.useRelativeError = true;
+					break;
+				case 'P':
+					BeatTrackDisplay.usePScore = true;
 					break;
 				case 'h':
 					GUI.DEFAULT_HIGH_THRESHOLD = Double.parseDouble(args[++i]);
@@ -265,8 +276,17 @@ public class BeatRoot {
 					audioProcessor.setInputFile(audioIn);
 					audioProcessor.processFile();
 					if (onsetOnly && (textOutputFile != null)) {
-						audioProcessor.onsetList.writeBinary(textOutputFile);
-						continue;
+						if (textOutputFile.endsWith(".obj"))
+							audioProcessor.onsetList.writeBinary(textOutputFile);
+						else try {
+							audioProcessor.onsetList.writeBeatsAsText(textOutputFile);
+						} catch (Exception e) {
+							System.err.println("Can't write onset file\n" + e);
+						}
+						if (argsFile != null)
+							continue;
+						else
+							break;
 					}
 				} else if (beatsIn == null) {
 					System.exit(0);
