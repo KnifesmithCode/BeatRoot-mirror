@@ -74,6 +74,7 @@ public class GUI extends JFrame {
 	
 	/** The scroller for showing or changing the position of the viewport relative to the whole audio file */
 	protected JScrollBar scroller;
+	protected int scrollBarWidth = 1000; // pixel
 	
 	/** An intermediate level panel containing the displayPanel and scroller */
 	protected JPanel scrollPane;
@@ -95,7 +96,7 @@ public class GUI extends JFrame {
 	
 	/** Version number of program - displayed as part of window title.
 	 *  DO NOT EDIT: This line is also used in creating the file name of the jar file. */
-	public static final String version = "0.5.7";
+	public static final String version = "0.5.6";
 	
 	/** Strings displayed on menus and buttons */
 	public static final String LOAD_AUDIO = "Load Audio Data";
@@ -192,6 +193,7 @@ public class GUI extends JFrame {
 		displayPanel = new BeatTrackDisplay(this, beats);
 		displayPanel.addKeyListener(listener);
 		displayPanel.setBeats(beats);
+		//displayPanel.addPropertyChangeListener(arg0)
 		EditAction.setDisplay(displayPanel);
 		
 		scroller = new JScrollBar();
@@ -202,9 +204,11 @@ public class GUI extends JFrame {
 		scroller.setUnitIncrement(100);
 		scroller.setBlockIncrement(400);
 		scroller.setOrientation(Adjustable.HORIZONTAL);
-		scroller.setPreferredSize(new Dimension(1000, 17));
+		scroller.setPreferredSize(new Dimension(scrollBarWidth, 17));
+		
 		scrollPane = new JPanel();
-		scrollPane.setPreferredSize(new Dimension(1010, displayPanel.ySize+17+10));
+		scrollPane.setLayout(new BorderLayout());
+		scrollPane.setPreferredSize(new Dimension(scrollBarWidth+10, displayPanel.ySize+17+10));
 		scrollPane.setBackground(Color.black);
 		scrollPane.add(displayPanel, BorderLayout.CENTER);
 		scrollPane.add(scroller, BorderLayout.SOUTH);
@@ -304,8 +308,8 @@ public class GUI extends JFrame {
 	protected JMenu makeBeatTrackMenu() {
 		JMenu menu = new JMenu("BeatTrack");
 		menu.setMnemonic(KeyEvent.VK_T);
-		menu.add(makeMenuItem(BEAT_TRACK, KeyEvent.VK_T, 0, false));
-		menu.add(makeMenuItem(CLEAR_BEATS, KeyEvent.VK_C, 0, false));
+		menu.add(makeMenuItem(BEAT_TRACK, KeyEvent.VK_B, KeyEvent.VK_B, false));
+		menu.add(makeMenuItem(CLEAR_BEATS, KeyEvent.VK_Z, KeyEvent.VK_Z, false));
 		menu.add(makeMenuItem(MARK_METRICAL_LEVEL, KeyEvent.VK_M, KeyEvent.VK_M, false));
 		menu.add(makeMenuItem(CLEAR_METRICAL_LEVELS, KeyEvent.VK_L, 0, false));
 		return menu;
@@ -353,6 +357,7 @@ public class GUI extends JFrame {
 	} // loadBeatData()
 
 	/** Saves beat data to a file chosen by a file save dialog. */
+	// TODO Check for the correct extension of exported file names
 	public void saveBeatData() {
 		try {
 			beats.writeBeatTrackFile(chooser.getBeatOutName());
@@ -460,6 +465,16 @@ public class GUI extends JFrame {
 	public void scroll(int dir) {
 		scroller.setValue(scroller.getValue() + dir * scroller.getUnitIncrement());
 	} // scroll()
+	
+	/** Scroll the display by a given amount in seconds. Used for keyboard input 
+	 * @param incr amount of shift in seconds (positive to the right, vice versa)
+	 * inserted by WG, Aug 2009.
+	 */
+	public void scroll(double incr) {
+		displayPanel.setCurrentTime(displayPanel.getCurrentTime() + incr);
+		skipTo(displayPanel.getCurrentTime());
+		displayPanel.scrollTo(displayPanel.getCurrentTime(), false);
+	}
 
 	/** Copies default values into preferences dialog. */
 	public void setPreferences() {
@@ -520,5 +535,13 @@ public class GUI extends JFrame {
 	public String getPercussionSound(int level) {
 		return percussionSounds.getString(PERCUSSION_STRINGS[level][0]);
 	} // getPercussionSound()
+	
+	public void setOnsetDetectionParameter(double param1,double param2) {
+		if (audioProcessor.audioFileName != null) {
+			audioProcessor.findOnsets(param1, param2);
+			audioProcessor.setDisplay(displayPanel); // after processing
+			updateDisplay(false);
+		}
+	} // setOnsetDetectionParameter()
 	
 } // class GUI

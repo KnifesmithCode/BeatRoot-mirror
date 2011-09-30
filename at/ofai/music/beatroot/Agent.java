@@ -20,9 +20,10 @@
 package at.ofai.music.beatroot;
 
 import java.util.ListIterator;
+
+import at.ofai.music.audio.Util;
 import at.ofai.music.util.Event;
 import at.ofai.music.util.EventList;
-import at.ofai.music.audio.Util;
 
 /** Agent is the central class for beat tracking.
  *  Each Agent object has a tempo hypothesis, a history of tracked beats, and

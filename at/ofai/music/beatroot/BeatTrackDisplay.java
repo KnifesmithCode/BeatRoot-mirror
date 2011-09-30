@@ -1,20 +1,20 @@
 /*  BeatRoot: An interactive beat tracking system
-    Copyright (C) 2001, 2006 by Simon Dixon
+   Copyright (C) 2001, 2006 by Simon Dixon
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program (the file gpl.txt); if not, download it from
+   You should have received a copy of the GNU General Public License along
+   with this program (the file gpl.txt); if not, download it from
 	http://www.gnu.org/licenses/gpl.txt or write to the Free Software Foundation, Inc.,
-    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
 package at.ofai.music.beatroot;
@@ -29,7 +29,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
-
 import java.util.Arrays;
 import java.util.ListIterator;
 
@@ -40,9 +39,9 @@ import at.ofai.music.util.Event;
 import at.ofai.music.util.EventList;
 
 /** Main panel of BeatRoot's GUI, which displays the audio and beat data
- *  and allows editing, scrolling, selecting, etc
- *  @author Simon Dixon
- */
+*  and allows editing, scrolling, selecting, etc
+*  @author Simon Dixon
+*/
 public class BeatTrackDisplay
 			 extends JPanel
 			 implements MouseListener, MouseMotionListener {
@@ -54,6 +53,7 @@ public class BeatTrackDisplay
 	protected GUI gui;
 	
 	/** width in pixels of this panel */
+	protected final int defaultXSize = 1000;
 	protected int xSize;
 	
 	/** height in pixels of this panel */
@@ -136,93 +136,93 @@ public class BeatTrackDisplay
 	
 	/** colour map used in the spectrogram */
 	public static final Color[] colour = {
-            new Color( 11,  0,  0),
-            new Color( 21,  0,  0),
-            new Color( 32,  0,  0),
-            new Color( 43,  0,  0),
-            new Color( 53,  0,  0),
-            new Color( 64,  0,  0),
-            new Color( 74,  0,  0),
-            new Color( 85,  0,  0),
-            new Color( 96,  0,  0),
-            new Color(106,  0,  0),
-            new Color(117,  0,  0),
-            new Color(128,  0,  0),
-            new Color(138,  0,  0),
-            new Color(149,  0,  0),
-            new Color(159,  0,  0),
-            new Color(170,  0,  0),
-            new Color(181,  0,  0),
-            new Color(191,  0,  0),
-            new Color(202,  0,  0),
-            new Color(212,  0,  0),
-            new Color(223,  0,  0),
-            new Color(234,  0,  0),
-            new Color(244,  0,  0),
-            new Color(255,  0,  0),
-            new Color(255, 11,  0),
-            new Color(255, 21,  0),
-            new Color(255, 32,  0),
-            new Color(255, 43,  0),
-            new Color(255, 53,  0),
-            new Color(255, 64,  0),
-            new Color(255, 74,  0),
-            new Color(255, 85,  0),
-            new Color(255, 96,  0),
-            new Color(255,106,  0),
-            new Color(255,117,  0),
-            new Color(255,128,  0),
-            new Color(255,138,  0),
-            new Color(255,149,  0),
-            new Color(255,159,  0),
-            new Color(255,170,  0),
-            new Color(255,181,  0),
-            new Color(255,191,  0),
-            new Color(255,202,  0),
-            new Color(255,212,  0),
-            new Color(255,223,  0),
-            new Color(255,234,  0),
-            new Color(255,244,  0),
-            new Color(255,255,  0),
-            new Color(255,255, 16),
-            new Color(255,255, 32),
-            new Color(255,255, 48),
-            new Color(255,255, 64),
-            new Color(255,255, 80),
-            new Color(255,255, 96),
-            new Color(255,255,112),
-            new Color(255,255,128),
-            new Color(255,255,143),
-            new Color(255,255,159),
-            new Color(255,255,175),
-            new Color(255,255,191),
-            new Color(255,255,207),
-            new Color(255,255,223),
-            new Color(255,255,239),
-            new Color(255,255,255)};
+           new Color( 11,  0,  0),
+           new Color( 21,  0,  0),
+           new Color( 32,  0,  0),
+           new Color( 43,  0,  0),
+           new Color( 53,  0,  0),
+           new Color( 64,  0,  0),
+           new Color( 74,  0,  0),
+           new Color( 85,  0,  0),
+           new Color( 96,  0,  0),
+           new Color(106,  0,  0),
+           new Color(117,  0,  0),
+           new Color(128,  0,  0),
+           new Color(138,  0,  0),
+           new Color(149,  0,  0),
+           new Color(159,  0,  0),
+           new Color(170,  0,  0),
+           new Color(181,  0,  0),
+           new Color(191,  0,  0),
+           new Color(202,  0,  0),
+           new Color(212,  0,  0),
+           new Color(223,  0,  0),
+           new Color(234,  0,  0),
+           new Color(244,  0,  0),
+           new Color(255,  0,  0),
+           new Color(255, 11,  0),
+           new Color(255, 21,  0),
+           new Color(255, 32,  0),
+           new Color(255, 43,  0),
+           new Color(255, 53,  0),
+           new Color(255, 64,  0),
+           new Color(255, 74,  0),
+           new Color(255, 85,  0),
+           new Color(255, 96,  0),
+           new Color(255,106,  0),
+           new Color(255,117,  0),
+           new Color(255,128,  0),
+           new Color(255,138,  0),
+           new Color(255,149,  0),
+           new Color(255,159,  0),
+           new Color(255,170,  0),
+           new Color(255,181,  0),
+           new Color(255,191,  0),
+           new Color(255,202,  0),
+           new Color(255,212,  0),
+           new Color(255,223,  0),
+           new Color(255,234,  0),
+           new Color(255,244,  0),
+           new Color(255,255,  0),
+           new Color(255,255, 16),
+           new Color(255,255, 32),
+           new Color(255,255, 48),
+           new Color(255,255, 64),
+           new Color(255,255, 80),
+           new Color(255,255, 96),
+           new Color(255,255,112),
+           new Color(255,255,128),
+           new Color(255,255,143),
+           new Color(255,255,159),
+           new Color(255,255,175),
+           new Color(255,255,191),
+           new Color(255,255,207),
+           new Color(255,255,223),
+           new Color(255,255,239),
+           new Color(255,255,255)};
 	
 	/** the colour of the amplitude envelope */
-    static Color AUDIO_COLOUR = new Color(100,20,120);
-    
-    /** the colour of the MIDI piano roll */
-    static Color MIDI_COLOUR = Color.BLUE;
-    
-    /** the colour of the onset markers on the amplitude envelope */
-    static Color ONSET_COLOUR = Color.GREEN;
-    
-    /** the colour of the lines marking the beats */
-    static Color BEAT_COLOUR = Color.BLACK;
-    
-    /** the colour of the text (for IBIs and axes) */
-    static Color TEXT_COLOUR = Color.BLACK;
-    
-    /** the background colour of a selected region */
-    static Color SELECTION_COLOUR = new Color(240,200,200);
-    
-	/** the threshold below which the minimum colour is used in the spectrogram */
-    double loThreshold;
+   static Color AUDIO_COLOUR = new Color(100,20,120);
 
-    /** the threshold above which the maximum colour is used in the spectrogram */
+   /** the colour of the MIDI piano roll */
+   static Color MIDI_COLOUR = Color.BLUE;
+
+   /** the colour of the onset markers on the amplitude envelope */
+   static Color ONSET_COLOUR = Color.GREEN;
+
+   /** the colour of the lines marking the beats */
+   static Color BEAT_COLOUR = Color.BLACK;
+
+   /** the colour of the text (for IBIs and axes) */
+   static Color TEXT_COLOUR = Color.BLACK;
+
+   /** the background colour of a selected region */
+   static Color SELECTION_COLOUR = new Color(240,200,200);
+
+	/** the threshold below which the minimum colour is used in the spectrogram */
+   double loThreshold;
+
+   /** the threshold above which the maximum colour is used in the spectrogram */
 	double hiThreshold;
 	
 	/** the ratio of hop size to frame size (for aligning the spectrogram with the audio) */
@@ -310,7 +310,7 @@ public class BeatTrackDisplay
 		midiMin = 21;
 		midiMax = 108;
 		onsetList = null;
-		onsets = new double[0];
+		onsets = new double[0]; 
 		offsets = new double[0];
 		pitches = new int[0];
 		beats = b;
@@ -321,6 +321,7 @@ public class BeatTrackDisplay
 		// setBorder(BorderFactory.createLineBorder(Color.black));
 		addMouseListener(this);
 		addMouseMotionListener(this);
+		xSize = -1;
 		init(true);
 	} // BeatTrackDisplay constructor
 
@@ -328,16 +329,16 @@ public class BeatTrackDisplay
 	 * @param c The energy value
 	 * @return The corresponding colour for this energy value
 	 */
-    Color getColour(double c) {
-    	int max = colour.length - 1;
-        int index = (int)(max - (c - loThreshold) *
+   Color getColour(double c) {
+   	int max = colour.length - 1;
+       int index = (int)(max - (c - loThreshold) *
 							max / (hiThreshold - loThreshold));
-        return colour[index < 0? 0: (index > max? max: index)];
-    } // getColour()
+       return colour[index < 0? 0: (index > max? max: index)];
+   } // getColour()
 
-    /** Initialises the panel after new data is loaded or preferences are changed.
-     *  @param resetSelection Indicates whether the selected region should be cleared
-     */
+   /** Initialises the panel after new data is loaded or preferences are changed.
+    *  @param resetSelection Indicates whether the selected region should be cleared
+    */
 	synchronized public void init(boolean resetSelection) {
 		selectedBeat = null;
 		scrollDirection = 0;
@@ -376,7 +377,8 @@ public class BeatTrackDisplay
 			yMid = yTop + 352;
 			yBottom = yMid + 150;
 			ySize = yBottom + 20;
-			xSize = 1000;
+			if (xSize == -1)
+				xSize = defaultXSize;
 			setPreferredSize(new Dimension(xSize, ySize));
 		}
 		x0 = xSize;
@@ -511,6 +513,13 @@ public class BeatTrackDisplay
 	/** Renders the panel.
 	 *  @param g The Graphics object for painting on this panel. */
 	synchronized public void paint(Graphics g) {
+		//xSize = gui.getWidth();
+		//System.out.println("xSize repainted: now="+xSize);
+		/*if (xSize != getWidth()) {
+			xSize = getWidth();
+			System.out.println("xSize changed: now="+xSize);
+			init(false);
+		}*/
 		if (scrollDirection != 0) {
 			gui.scroll(scrollDirection);
 		}
@@ -527,11 +536,11 @@ public class BeatTrackDisplay
 
 	/** Clears the background image to white */
 	protected void clearImage() {
-        if (gImage != null) {
-            gImage.setColor(Color.white);
-            gImage.fillRect(0, 0, xSize, ySize);
-        }
-    } // clearImage()
+       if (gImage != null) {
+           gImage.setColor(Color.white);
+           gImage.fillRect(0, 0, xSize, ySize);
+       }
+   } // clearImage()
 	
 	/** Updates the background image, after creating it if necessary */
 	synchronized protected void repaintImage() {
@@ -631,9 +640,22 @@ public class BeatTrackDisplay
 				g.drawLine(position, yBottom-5, position, yBottom+5);
 			}
 		}
+		g.drawString("["+beats.size()+" beats]", 5, this.yTop+10); // WG: added to show number of beats
+		if (gui.audioPlayer.currentFile!=null) {  // WG: added to show length of audio file
+			String label = Double.toString(gui.audioPlayer.currentFile.length / 
+					gui.audioPlayer.currentFile.frameRate / gui.audioPlayer.currentFile.frameSize);
+			int position = label.indexOf('.');
+			if (position < 0) {
+				position = label.length();
+				label += ".";
+			}
+			label += "000";
+			label = label.substring(0, position + (tickGap < 0.5 ? 3 : 2));
+			g.drawString(label, xSize-metrics.stringWidth(label)-2, this.ySize-5);
+		}
 	} // paintAxes()
 
-	/** Paints the beats and inter-baet intervals
+	/** Paints the beats and inter-beat intervals
 	 *  @param g The Graphics object to paint to
 	 */
 	synchronized protected void paintBeats(Graphics g) {
@@ -970,6 +992,26 @@ public class BeatTrackDisplay
 				selectedBeat = null;
 		}
 	} // selectBeat()
+	
+	/** Finds the nearest detected onset time location to a given x-coordinate.
+	 * @param x The x-coordinate (e.g. of a mouse-click) near shich a beat is sought
+	 * @return The onset time (s) of the nearest detected onset.
+	 * inserted by WG, 7 Aug 2009
+	 */
+	synchronized public double selectOnset(int x) {
+		if (onsets.length == 0)
+			return -1.0;
+		int i = 0;
+		while (i < onsets.length-1 && timeToLocation(onsets[i]) <= x){
+			i++;
+		}
+		if (i == 0)
+			return onsets[i];
+		if (Math.abs(timeToLocation(onsets[i])-x) <= Math.abs(x-timeToLocation(onsets[i-1])))
+			return onsets[i];
+		else
+			return onsets[i-1];
+	} // selectOnset()
 
 	/** Creates a new Event object representing a beat.
 	 *  @param time The time of the beat in seconds
@@ -991,6 +1033,10 @@ public class BeatTrackDisplay
 			System.err.printf("Add at: %5.3f\n", time);
 	} // addBeatNow()
 
+	//public void addBeatCurrentTime() {
+	//	beatPtr.add(newBeat())
+	//}
+	
 	/** Adds a beat at the given time.
 	 *  @param time Time in seconds of the new beat
 	 */
@@ -1204,18 +1250,18 @@ public class BeatTrackDisplay
 	        roundedRatio = 1.5;
 	    else if ((0.9 < ratio) && (ratio < 1.3))
 	        roundedRatio = 1.0;
-        else if ((1.35 < ratio) && (ratio < 1.6))
-            roundedRatio = 2.0/3.0;
-        else if ((1.8 < ratio) && (ratio < 2.5))
-            roundedRatio = 0.5;
-        else if ((2.7 < ratio) && (ratio < 3.5))
-            roundedRatio = 1.0/3.0;
-        else if ((3.6 < ratio) && (ratio < 4.6))
-            roundedRatio = 0.25;
-        else if ((7.6 < ratio) && (ratio < 8.6))
-            roundedRatio = 0.125;
-        return roundedRatio;
-    } // getRhythmicLevel()
+       else if ((1.35 < ratio) && (ratio < 1.6))
+           roundedRatio = 2.0/3.0;
+       else if ((1.8 < ratio) && (ratio < 2.5))
+           roundedRatio = 0.5;
+       else if ((2.7 < ratio) && (ratio < 3.5))
+           roundedRatio = 1.0/3.0;
+       else if ((3.6 < ratio) && (ratio < 4.6))
+           roundedRatio = 0.25;
+       else if ((7.6 < ratio) && (ratio < 8.6))
+           roundedRatio = 0.125;
+       return roundedRatio;
+   } // getRhythmicLevel()
 
 	/** Evaluates a beat tracking solution against an annotation of the data.
 	 *  @param beatsFile The file name of the annotation data
@@ -1281,7 +1327,7 @@ public class BeatTrackDisplay
 	            c++;
 	        }
 	    }
-        fn += correct.length - c;
+       fn += correct.length - c;
 	    while (b < beatsArr.length) {
 	        if (correct[correct.length - 1] < beatsArr[b])
 	            extra++;
@@ -1326,38 +1372,59 @@ public class BeatTrackDisplay
 		synchronized(this) {
 			int x = e.getX();
 			int y = e.getY();
-			if ((y > 0) && (y < yTop)) {
-				if (!gui.audioPlayer.playing) {
-					currentTime = locationToTime(x);
-					gui.skipTo(currentTime);
-					scrollTo(currentTime, false);
-				}
-			} else if ((y >= yTop) && (y < yBottom)) {
-				if (SwingUtilities.isMiddleMouseButton(e)) {
-					addBeat(locationToTime(x));
-					beatPtr.previous();
-					selectedBeat = beatPtr.next();
-					selectedBeatTime = -1;
-				} else {
-					selectBeat(x, 5);
+			if (e.isControlDown()) { // WG added CTRL + Left Mouse shifts beats along detected onsets
+				if ((y >= yTop) && (y < yBottom) && // all clicks in the spectrogram
+						SwingUtilities.isLeftMouseButton(e)) { // Left Button
+					selectBeat(x, 10); 
 					if (selectedBeat != null)
-						selectedBeatTime = selectedBeat.keyDown;
-				}
-			} else if ((y >= yBottom) && (y < ySize)) {
-				if (SwingUtilities.isLeftMouseButton(e)) {
-					regionSelected = true;
-					if (e.isShiftDown() && (startSelection >= 0))
-						endSelection = locationToTime(x);
-					else {
-						startSelection = locationToTime(x);
-						endSelection = -1.0;
+						//selectedBeatTime = selectedBeat.keyDown;
+						selectedBeatTime = selectOnset(x);
+				} else if ((y >= yTop) && (y < yBottom)) { // all clicks in the spectrogram
+					if (SwingUtilities.isRightMouseButton(e)) { // WG changed from Middle to Right
+						addBeat(locationToTime(x));
+						beatPtr.previous();
+						selectedBeat = beatPtr.next();
+						selectedBeatTime = -1;
+					} else {
+						selectBeat(x, 10);
+						if (selectedBeat != null)
+							selectedBeatTime = selectedBeat.keyDown;
 					}
-				} else {
-					regionSelected = false;
-					startSelection = endSelection = -1.0;
-					repaintImage();
 				}
-			}
+			} else {
+				if ((y > 0) && (y < yTop)) {
+					if (!gui.audioPlayer.playing) {
+						currentTime = locationToTime(x);
+						gui.skipTo(currentTime);
+						scrollTo(currentTime, false);
+					}
+				} else if ((y >= yTop) && (y < yBottom)) { // all clicks in the spectrogram
+					if (SwingUtilities.isRightMouseButton(e)) { // WG changed from Middle to Right
+						addBeat(locationToTime(x));
+						beatPtr.previous();
+						selectedBeat = beatPtr.next();
+						selectedBeatTime = -1;
+					} else {
+						selectBeat(x, 10);
+						if (selectedBeat != null)
+							selectedBeatTime = selectedBeat.keyDown;
+					}
+				} else if ((y >= yBottom) && (y < ySize)) {
+					if (SwingUtilities.isLeftMouseButton(e)) {
+						regionSelected = true;
+						if (e.isShiftDown() && (startSelection >= 0)) 
+							endSelection = locationToTime(x);
+						else {
+							startSelection = locationToTime(x);
+							endSelection = -1.0;
+						}
+					} else {
+						regionSelected = false;
+						startSelection = endSelection = -1.0;
+						repaintImage();
+					}
+				}
+			} 
 			repaint();
 		}
 	} // mousePressed()
@@ -1370,9 +1437,14 @@ public class BeatTrackDisplay
 			int x = e.getX();
 			int y = e.getY();
 			if ((selectedBeat != null) && (x >= 0) && (x <= xSize) &&
-										(y >= 0) && (y <= ySize)) {
-				if (!SwingUtilities.isRightMouseButton(e)) {
-					selectedBeat.keyDown = locationToTime(x);
+					(y >= 0) && (y <= ySize)) {
+				if (!SwingUtilities.isMiddleMouseButton(e)) { 
+					if (e.isControlDown()) {
+						selectedBeat.keyDown = selectOnset(x);
+
+					} else {
+						selectedBeat.keyDown = locationToTime(x);
+					}
 					reorderBeats();
 				}
 			} else if (regionSelected) {
@@ -1383,7 +1455,7 @@ public class BeatTrackDisplay
 						scrollDirection = 1;
 					else
 						scrollDirection = 0;
-					if (Math.abs(timeToLocation(startSelection) - x) == 0)
+					if (Math.abs(timeToLocation(startSelection) - x) <= 15) // WG changed from '==0' to '<=15'; to avoid region selection, when all to end selection was desired! Aug 2009
 						endSelection = -1;
 					else
 						endSelection = locationToTime(x);
@@ -1400,9 +1472,9 @@ public class BeatTrackDisplay
 		if (selectedBeat != null) {
 			if (SwingUtilities.isLeftMouseButton(e)) // move
 				EditAction.add(selectedBeatTime, selectedBeat.keyDown);
-			else if (SwingUtilities.isMiddleMouseButton(e)) // add
+			else if (SwingUtilities.isRightMouseButton(e)) // add // WG changed from Middle to Right
 				EditAction.add(-1, selectedBeat.keyDown);
-			else {								// right button, delete
+			else if (SwingUtilities.isMiddleMouseButton(e)) { // right button, delete
 				beatPtr.remove();
 				EditAction.add(selectedBeatTime, -1);
 			}
@@ -1501,5 +1573,24 @@ public class BeatTrackDisplay
 		tInc = inc;
 		overlap = lap;
 	} // setSpectro()
+	
+	/**
+	 * WG: To resize the panel in the x dimension.
+	 */
+	public void resizeX() {
+		setPreferredSize(new Dimension(xSize,ySize));
+	}
+
+	public double getCurrentTime() {
+		return currentTime;
+	}
+
+	public void setCurrentTime(double currentTime) {
+		this.currentTime = currentTime;
+	}
+	
+	public void setOnsetDetectionParam(double param1,double param2) {
+		gui.setOnsetDetectionParameter(param1,param2);
+	}
 
 } // class BeatTrackDisplay

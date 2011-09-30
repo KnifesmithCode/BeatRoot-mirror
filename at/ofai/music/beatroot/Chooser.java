@@ -19,17 +19,22 @@
 
 package at.ofai.music.beatroot;
 
+import java.io.File;
+
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileSystemView;
 
 /** An extension of the Swing file chooser for specific file types. */
 public class Chooser extends JFileChooser {
 	
 	static final long serialVersionUID = 0;	// avoid compiler warning
+	
+	File file = null;
 
 	/** Constructor for BeatRoot's file chooser */
 	public Chooser() {
-		super(".");
+		super(FileSystemView.getFileSystemView().getHomeDirectory()); // WG changed from super(".")
 		addChoosableFileFilter(getAcceptAllFileFilter());
 	} // constructor
 
@@ -41,9 +46,19 @@ public class Chooser extends JFileChooser {
 	public String getInputName(FileFilters ff) {
 		String pathName = null;
 		addChoosableFileFilter(ff);
+		if (file != null) {
+			pathName = file.getAbsolutePath();
+			int index = pathName.lastIndexOf(".");
+			if (index > 0)
+				pathName = pathName.substring(0, index);
+			file = new File(pathName + ff.suffix);
+			setSelectedFile(file);
+		}
 		if (showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-			if (getSelectedFile().exists())
+			if (getSelectedFile().exists()) {
+				file = getSelectedFile();
 				pathName = getSelectedFile().getAbsolutePath();
+			}
 		}
 		removeChoosableFileFilter(ff);
 		return pathName;
@@ -76,13 +91,27 @@ public class Chooser extends JFileChooser {
 	public String getOutputName(FileFilters ff) {
 		String pathName = null;
 		addChoosableFileFilter(ff);
+		if (file != null) {
+			pathName = file.getAbsolutePath();
+			int index = pathName.lastIndexOf(".");
+			if (index > 0)
+				pathName = pathName.substring(0, index);
+			file = new File(pathName + ff.suffix);
+			setSelectedFile(file);
+		}
 		if (showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 			if (!getSelectedFile().exists() || (
 						JOptionPane.showConfirmDialog(null,
 						"File " + getSelectedFile().getAbsolutePath() +
 						" exists.\nDo you want to replace it?", "Are you sure?",
-						JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION))
+						JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)) {
 				pathName = getSelectedFile().getAbsolutePath();
+				int index = pathName.lastIndexOf(".");
+				if (index > 0)
+					pathName = pathName.substring(0, index);
+				file = new File(pathName + ((FileFilters)getFileFilter()).suffix);
+				pathName = file.getAbsolutePath();
+			}
 		}
 		removeChoosableFileFilter(ff);
 		return pathName;
@@ -97,10 +126,18 @@ public class Chooser extends JFileChooser {
 	/** Opens a dialog to get a file name for saving beat information.
 	 *  @return The file name for saving beat information */
 	public String getBeatOutName() {
-		//addChoosableFileFilter(FileFilters.tmfFileFilter);
 		addChoosableFileFilter(FileFilters.textFileFilter);
 		addChoosableFileFilter(FileFilters.csvFileFilter);
 		String oName = getOutputName(FileFilters.tmfFileFilter);
+		/*if (getFileFilter()==FileFilters.textFileFilter &&
+				!oName.endsWith(".txt"))
+			oName = oName + ".txt";
+		if (getFileFilter()==FileFilters.tmfFileFilter &&
+				!oName.endsWith(".tmf"))
+			oName = oName + ".tmf";
+		if (getFileFilter()==FileFilters.csvFileFilter &&
+				!oName.endsWith(".csv"))
+			oName = oName + ".csv";*/
 		removeChoosableFileFilter(FileFilters.textFileFilter);
 		removeChoosableFileFilter(FileFilters.csvFileFilter);
 		return oName;

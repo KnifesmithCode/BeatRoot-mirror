@@ -80,9 +80,9 @@ public class AudioFile {
 			channels = format.getChannels();
 			length = audioIn.getFrameLength() * frameSize;
 		} catch (java.io.IOException e) {	// includes FileNotFound
-			e.printStackTrace();
+			System.err.println("File not found."); //e.printStackTrace();
 		} catch (UnsupportedAudioFileException e) {
-			e.printStackTrace();
+			System.err.println("File not supported."); //e.printStackTrace();
 		}
 	} // constructor
 

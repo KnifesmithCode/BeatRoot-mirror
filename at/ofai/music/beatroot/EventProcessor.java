@@ -125,12 +125,12 @@ class EventProcessor implements ActionListener, KeyListener {
 				audioPlayer.stop(false);
 				gui.displayPanel.toggleAnnotateMode();
 				break;
-			case KeyEvent.VK_LEFT:
+			/*case KeyEvent.VK_LEFT:
 				gui.displayPanel.selectPreviousBeat();
 				break;
 			case KeyEvent.VK_RIGHT:
 				gui.displayPanel.selectNextBeat();
-				break;
+				break;*/
 			case KeyEvent.VK_HOME:
 				gui.displayPanel.selectFirstBeat();
 				break;
@@ -172,13 +172,52 @@ class EventProcessor implements ActionListener, KeyListener {
 					System.err.print(System.nanoTime() / 1000000 % 100000);
 				gui.displayPanel.addBeatNow();
 				break;
+			case KeyEvent.VK_V:
+				gui.displayPanel.addBeat(gui.displayPanel.getCurrentTime());
+				break;
 			case KeyEvent.VK_P:
 				audioPlayer.play();
 				break;
 			case KeyEvent.VK_S:
 				audioPlayer.stop();
 				break;
+			case KeyEvent.VK_SPACE: // WG. inserted (4 Aug 2009)
+				if (audioPlayer.playing)
+					audioPlayer.stop();
+				else
+					audioPlayer.play();
+				break;
+			case KeyEvent.VK_B: // WG. inserted (4 Aug 2009)
+				gui.displayPanel.beatTrack();
+				break;
+			case KeyEvent.VK_Z: // WG. inserted (5 Aug 2009)
+				gui.displayPanel.clearBeats();
+				break;
+			case KeyEvent.VK_RIGHT:
+				gui.scroll(.025);
+				break;
+			case KeyEvent.VK_LEFT:
+				gui.scroll(-.025);
+				break;
 			} // switch
+		} else if (modifiers == KeyEvent.CTRL_MASK) {
+			switch (keyCode) {
+			case KeyEvent.VK_RIGHT:
+				gui.scroll(.1);
+				break;
+			case KeyEvent.VK_LEFT:
+				gui.scroll(-.1);
+				break;
+			} // switch
+		} else if (modifiers == KeyEvent.ALT_MASK) {
+			switch (keyCode) {
+			case KeyEvent.VK_RIGHT:
+				gui.scroll(.005);
+				break;
+			case KeyEvent.VK_LEFT:
+				gui.scroll(-.005);
+				break;
+			} // switch			
 		}
 	} // keyPressed()
 	

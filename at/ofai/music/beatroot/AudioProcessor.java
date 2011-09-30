@@ -164,6 +164,9 @@ public class AudioProcessor {
 	/** The estimated onset times and their saliences. */	
 	protected EventList onsetList;
 
+	/** The y-coordinates of the onsets for plotting. Only used if doOnsetPlot is true */
+	protected double[] y2Onsets;
+	
 	/** GUI component which shows progress of audio processing. */
 	protected ProgressIndicator progressCallback;
 
@@ -606,18 +609,61 @@ public class AudioProcessor {
 //		Peaks.getSlope(energy, hop, 15, slope);
 //		LinkedList<Integer> peaks = Peaks.findPeaks(slope, (int)Math.round(0.06 / hop), 10);
 		
-		double hop = hopTime;
+//		double hop = hopTime;
+//		Peaks.normalise(spectralFlux);
+//		LinkedList<Integer> peaks = Peaks.findPeaks(spectralFlux, (int)Math.round(0.06 / hop), 0.35, 0.84, true);
+//		onsets = new double[peaks.size()];
+//		double[] y2 = new double[onsets.length];
+//		Iterator<Integer> it = peaks.iterator();
+//		onsetList = new EventList();
+//		double minSalience = Peaks.min(spectralFlux);
+//		for (int i = 0; i < onsets.length; i++) {
+//			int index = it.next();
+//			onsets[i] = index * hop;
+//			y2[i] = spectralFlux[index];
+//			Event e = BeatTrackDisplay.newBeat(onsets[i], 0);
+////			if (debug)
+////				System.err.printf("Onset: %8.3f  %8.3f  %8.3f\n",
+////						onsets[i], energy[index], slope[index]);
+////			e.salience = slope[index];	// or combination of energy + slope??
+//			// Note that salience must be non-negative or the beat tracking system fails!
+//			e.salience = spectralFlux[index] - minSalience;
+//			onsetList.add(e);
+//		}
+		double p1 = 0.35;
+		double p2 = 0.84;
+		
 		Peaks.normalise(spectralFlux);
-		LinkedList<Integer> peaks = Peaks.findPeaks(spectralFlux, (int)Math.round(0.06 / hop), 0.35, 0.84, true);
+		findOnsets(p1, p2);
+		
+		if (progressCallback != null)
+			progressCallback.setFraction(1.0);
+		if (doOnsetPlot) {
+			double[] x1 = new double[spectralFlux.length];
+			for (int i = 0; i < x1.length; i++)
+				x1[i] = i * hopTime;
+			plot.addPlot(x1, spectralFlux, Color.red, 4);
+			plot.addPlot(onsets, y2Onsets, Color.green, 3);
+			plot.setTitle("Spectral flux and onsets");
+			plot.fitAxes();
+		}
+		if (debug) {
+			System.err.printf("Onsets: %d\nContinue? ", onsets.length);
+			readLine();
+		}
+	} // processFile()
+	
+	public void findOnsets(double p1, double p2){
+		LinkedList<Integer> peaks = Peaks.findPeaks(spectralFlux, (int)Math.round(0.06 / hopTime), p1, p2, true);
 		onsets = new double[peaks.size()];
-		double[] y2 = new double[onsets.length];
+		y2Onsets = new double[onsets.length];
 		Iterator<Integer> it = peaks.iterator();
 		onsetList = new EventList();
 		double minSalience = Peaks.min(spectralFlux);
 		for (int i = 0; i < onsets.length; i++) {
 			int index = it.next();
-			onsets[i] = index * hop;
-			y2[i] = spectralFlux[index];
+			onsets[i] = index * hopTime;
+			y2Onsets[i] = spectralFlux[index];
 			Event e = BeatTrackDisplay.newBeat(onsets[i], 0);
 //			if (debug)
 //				System.err.printf("Onset: %8.3f  %8.3f  %8.3f\n",
@@ -627,23 +673,7 @@ public class AudioProcessor {
 			e.salience = spectralFlux[index] - minSalience;
 			onsetList.add(e);
 		}
-		if (progressCallback != null)
-			progressCallback.setFraction(1.0);
-		if (doOnsetPlot) {
-			double[] x1 = new double[spectralFlux.length];
-			for (int i = 0; i < x1.length; i++)
-				x1[i] = i * hopTime;
-			plot.addPlot(x1, spectralFlux, Color.red, 4);
-			plot.addPlot(onsets, y2, Color.green, 3);
-			plot.setTitle("Spectral flux and onsets");
-			plot.fitAxes();
-		}
-		if (debug) {
-			System.err.printf("Onsets: %d\nContinue? ", onsets.length);
-			readLine();
-		}
-	} // processFile()
-
+	}
 	/** Reads a text file containing a list of whitespace-separated feature values.
 	 *  Created for paper submitted to ICASSP'07.
 	 *  @param fileName File containing the data

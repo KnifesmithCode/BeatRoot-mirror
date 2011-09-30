@@ -398,7 +398,7 @@ public class BeatRoot {
 				"this operation may result in loss of data :)\n" + 
 				"Do you really want to quit?", "Just checking ...",
 				JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
-			System.exit(0);
+				System.exit(0);
 	} // quit()
 
 	/** Print a warning message.
